@@ -54,11 +54,12 @@ def create_index_page(data, img_dir):
     for item in data:
         date = item["date"]
         description = item["description"]
-        thumbnail = item["thumbnail"]
         if "image" in item:
-            img_path = os.path.join(img_dir, item["image"])
-            thumb_path = os.path.join(img_dir, item["thumbnail"])
-            page_name = item["image"].split(".")[0] + ".html"
+            image = item["image"]
+            thumbnail = item["thumbnail"]
+            img_path = os.path.join(img_dir, image["filename"])
+            thumb_path = os.path.join(img_dir, thumbnail["filename"])
+            page_name = image["filename"].split(".")[0] + ".html"
             # Create individual image page
             with open("../" + page_name, "w") as f:
                 f.write(create_image_page(date, description, img_path))
