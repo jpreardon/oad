@@ -1,5 +1,9 @@
 # One a Day
 
-A quick and dirty static site for hosting a "one picture a day" project. I know, far from original.
+*Photoblogging like it's 1996*
 
-Used Chat GPT as a starting point for some of the code. I'll leave it to the reader to judge whether what it created is better or worse than what I would have done with my normal stackoverflow => trial & error workflow.
+This quick and dirty static site for hosting a "one picture a day" project. I know, far from original.
+
+No databases, no javascript, no frameworks. Just some very, very basic code.
+
+I used Chat GPT as a starting point for the python code. I'll leave it to the reader to judge whether what it created is better or worse than what I would have done with my normal trial & error workflow.
