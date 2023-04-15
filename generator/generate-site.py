@@ -16,7 +16,7 @@ def create_image_page(date, description, img_path):
         str: The HTML code for the page.
     """
     html = "<!DOCTYPE html>\n"
-    html += "<html lang="en">\n"
+    html += "<html lang=\"en\">\n"
     html += "<head>\n"
     html += "<title>" + date + "</title>\n"
     html += "<link href=\"styles/main.css\" rel=\"stylesheet\">\n"
@@ -45,7 +45,7 @@ def create_index_page(data, img_dir):
         str: The HTML code for the page.
     """
     html = "<!DOCTYPE html>\n"
-    html += "<html lang="en">\n"
+    html += "<html lang=\"en\">\n"
     html += "<head>\n"
     html += "<title>One a Day</title>\n"
     html += "<link href=\"styles/main.css\" rel=\"stylesheet\">\n"
