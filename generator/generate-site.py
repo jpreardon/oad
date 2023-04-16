@@ -2,6 +2,10 @@
 
 import json
 import os
+import html
+import xml.sax.saxutils
+import socket
+import sys
 
 def create_image_page(date, description, img_path):
     """
@@ -44,10 +48,12 @@ def create_index_page(data, img_dir):
     Returns:
         str: The HTML code for the page.
     """
+
     html = "<!DOCTYPE html>\n"
     html += "<html lang=\"en\">\n"
     html += "<head>\n"
     html += "<title>One a Day</title>\n"
+    html += "<link rel=\"alternate\" type=\"application/rss+xml\" href=\"" + site_url + "rss.xml\" title=\"RSS Feed\">\n"
     html += "<link href=\"styles/main.css\" rel=\"stylesheet\">\n"
     html += "</head>\n"
     html += "<body>\n"
@@ -77,18 +83,68 @@ def create_index_page(data, img_dir):
 
     return html
 
+def create_rss_feed(data, img_dir):
+    """
+    Create a static HTML index page with links to individual image pages.
+
+    Args:
+        data (list): List of dictionaries containing the JSON data.
+        img_dir (str): Path to the directory containing the images.
+
+    Returns:
+        str: The HTML and RSS code for the page.
+    """
+    rss = "<?xml version=\"1.0\"?>\n"
+    rss += "<rss version=\"2.0\">\n"
+    rss += "<channel>\n"
+    rss += "<title>One a Day</title>\n"
+    rss += "<link>" + site_url + "</link>\n"
+    rss += "<description>One picture a day, need I say more?</description>\n"
+
+    for item in data:
+        date = item["date"]
+        description = xml.sax.saxutils.escape(html.escape(item["description"]))
+        image = item["image"]
+        page_name = image["filename"].split(".")[0] + ".html"
+        rss += "<item>\n"
+        rss += "<title>" + date + "</title>\n"
+        rss += "<link>" + site_url + page_name + "</link>\n"
+        rss += "<description>" + description + "</description>\n"
+        rss += "</item>\n"
+
+    rss += "</channel>\n"
+    rss += "</rss>"
+
+    return rss
+
 if __name__ == "__main__":
 
-    image_directory_path = "../images"
-    image_directory_name = "images"
+    try:
+        # Get URL from command arguments
+        site_url = sys.argv[1]
 
-    # Load JSON data
-    with open(os.path.join(image_directory_path, "data.json"), "r") as f:
-        data = json.load(f)
+        image_directory_path = "../images"
+        image_directory_name = "images"
 
-    # Create index page with links to individual image pages
-    html = create_index_page(data, image_directory_name)
+        # Load JSON data
+        with open(os.path.join(image_directory_path, "data.json"), "r") as f:
+            data = json.load(f)
 
-    # Write index page to file
-    with open("../index.html", "w") as f:
-        f.write(html)
+        # Create index page with links to individual image pages
+        index_page = create_index_page(data, image_directory_name)
+
+        # Create rss feed
+        rss = create_rss_feed(data, image_directory_name)
+
+        # Write index page to file
+        with open("../index.html", "w") as f:
+            f.write(index_page)
+
+        # Write the rss feed to file
+        with open("../rss.xml", "w") as f:
+            f.write(rss)
+
+    except Exception as e:
+        print("Error:", e)
+        # clean up resources here...
+        sys.exit(1)
