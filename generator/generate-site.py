@@ -103,13 +103,16 @@ def create_rss_feed(data, img_dir):
 
     for item in data:
         date = item["date"]
-        description = xml.sax.saxutils.escape(html.escape(item["description"]))
+        description = item["description"]
         image = item["image"]
+        img_path = os.path.join(img_dir, image["filename"])
         page_name = image["filename"].split(".")[0] + ".html"
+        rss_description = xml.sax.saxutils.escape(html.escape("<img src=\"" + img_path + "\" alt=\"" + description + "\" /><p>" + description + "</p>"))
+
         rss += "<item>\n"
         rss += "<title>" + date + "</title>\n"
         rss += "<link>" + site_url + page_name + "</link>\n"
-        rss += "<description>" + description + "</description>\n"
+        rss += "<description>" + rss_description + "</description>\n"
         rss += "</item>\n"
 
     rss += "</channel>\n"
