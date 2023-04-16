@@ -3,8 +3,6 @@
 import json
 import os
 import html
-import xml.sax.saxutils
-import socket
 import sys
 
 def create_image_page(date, description, img_path):
@@ -94,7 +92,7 @@ def create_rss_feed(data, img_dir):
     Returns:
         str: The HTML and RSS code for the page.
     """
-    rss = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+    rss = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
     rss += "<rss version=\"2.0\">\n"
     rss += "<channel>\n"
     rss += "<title>One a Day</title>\n"
@@ -107,7 +105,7 @@ def create_rss_feed(data, img_dir):
         image = item["image"]
         img_path = os.path.join(img_dir, image["filename"])
         page_name = image["filename"].split(".")[0] + ".html"
-        rss_description = xml.sax.saxutils.escape(html.escape("<img src=\"" + site_url + img_path + "\" alt=\"" + description + "\" /> <p>" + description + "</p>"))
+        rss_description = html.escape("<img src=\"" + site_url + img_path + "\" alt=\"" + description + "\" /> <p>" + description + "</p> <p><a href=\"" + site_url + page_name + "\">view on site</a>")
 
         rss += "<item>\n"
         rss += "<title>" + date + "</title>\n"
