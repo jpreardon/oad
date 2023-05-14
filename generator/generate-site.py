@@ -67,7 +67,7 @@ def create_index_page(data, img_dir):
             thumb_path = os.path.join(img_dir, thumbnail["filename"])
             page_name = image["filename"].split(".")[0] + ".html"
             # Create individual image page
-            with open("../" + page_name, "w") as f:
+            with open(public_directory_path + page_name, "w") as f:
                 f.write(create_image_page(date, description, img_path))
             # Add link to index page
             html += "<a href=\"" + page_name + "\"><img class=\"thumbnail\" src=\"" + thumb_path + "\" alt=\"" + description + "\" title=\"" + date + " - " + description + "\"/></a>\n"
@@ -121,11 +121,16 @@ def create_rss_feed(data, img_dir):
 if __name__ == "__main__":
 
     try:
-        # Get URL from command arguments
+        # Get URL and paths from command arguments
         site_url = sys.argv[1]
 
-        image_directory_path = "../images"
+        # public directory path
+        public_directory_path = sys.argv[2]
+
         image_directory_name = "images"
+
+        # was "../images"
+        image_directory_path = public_directory_path + image_directory_name
 
         # Load JSON data
         with open(os.path.join(image_directory_path, "data.json"), "r") as f:
@@ -138,11 +143,11 @@ if __name__ == "__main__":
         rss = create_rss_feed(data, image_directory_name)
 
         # Write index page to file
-        with open("../index.html", "w") as f:
+        with open(public_directory_path + "index.html", "w") as f:
             f.write(index_page)
 
         # Write the rss feed to file
-        with open("../rss.xml", "w") as f:
+        with open(public_directory_path + "rss.xml", "w") as f:
             f.write(rss)
 
     except Exception as e:
