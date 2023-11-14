@@ -4,6 +4,7 @@ import json
 import os
 import html
 import sys
+from datetime import datetime
 
 def create_image_page(date, description, img_path):
     """
@@ -101,7 +102,7 @@ def create_rss_feed(data, img_dir):
     rss += "<channel>\n"
     rss += "<title>One a Day</title>\n"
     rss += "<link>" + site_url + "</link>\n"
-    rss += "<description>One picture a day, need I say more?</description>\n"
+    rss += "<description>Photoblogging like it's 1996! One picture a day, for a year (at least).</description>\n"
 
     for item in data:
         date = item["date"]
@@ -115,12 +116,19 @@ def create_rss_feed(data, img_dir):
         rss += "<title>" + date + "</title>\n"
         rss += "<link>" + site_url + page_name + "</link>\n"
         rss += "<description>" + rss_description + "</description>\n"
+        rss += "<pubDate>" + rfc822date(date) + "</pubDate>\n"
         rss += "</item>\n"
 
     rss += "</channel>\n"
     rss += "</rss>"
 
     return rss
+
+def rfc822date(date_string):
+
+    rfc_date_string = datetime.strptime(date_string, '%B %d, %Y')
+    
+    return rfc_date_string.strftime("%a, %d %b %Y %H:%M:%S -0000")
 
 if __name__ == "__main__":
 
