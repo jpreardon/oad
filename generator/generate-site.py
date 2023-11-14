@@ -30,7 +30,7 @@ def create_image_page(date, description, img_path):
     html += "<div class=\"container\">\n"
     html += "<img class=\"main-image\" src=\"" + img_path + "\" alt=\"" + description + "\" title=\"" + date + " - " + description + "\" />\n"
     html += "<a href=\"index.html\" >go back...</a>"
-    html += "<div />\n"
+    html += "</div>\n"
     html += "</body>\n"
     html += "<footer>\n"
     html += "<p>" + copyright + "</p>\n"
