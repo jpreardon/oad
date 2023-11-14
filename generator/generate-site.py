@@ -4,7 +4,7 @@ import json
 import os
 import html
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 def create_image_page(date, description, img_path):
     """
@@ -105,7 +105,7 @@ def create_rss_feed(data, img_dir):
     rss += "<description>" + site_description + "</description>\n"
     rss += "<language>en-us</language>\n"
     rss += "<copyright>" + copyright + "</copyright>\n"
-    rss += "<lastBuildDate>" + datetime.now().strftime(date_format) + "</lastBuildDate>\n"
+    rss += "<lastBuildDate>" + datetime.now(timezone.utc).strftime(date_format) + "</lastBuildDate>\n"
     rss += "<docs>https://www.rssboard.org/rss-specification</docs>\n"
 
     for item in data:
@@ -130,7 +130,7 @@ def create_rss_feed(data, img_dir):
 
 def rfc822date(date_string):
 
-    rfc_date_string = datetime.strptime(date_string, '%B %d, %Y')
+    rfc_date_string = datetime.strptime(date_string, '%B %d, %Y').replace(tzinfo=timezone.utc)
     
     return rfc_date_string.strftime(date_format)
 
@@ -140,7 +140,7 @@ if __name__ == "__main__":
         # Some global variables
         copyright = "Copyright © 2023 JP Reardon"
         site_description = "Photoblogging like it's 1996! One picture a day, for a year (at least)."
-        date_format = "%a, %d %b %Y %H:%M:%S -0000"
+        date_format = "%a, %d %b %Y %H:%M:%S %z"
 
         # Get URL and paths from command arguments
         site_url = sys.argv[1]
