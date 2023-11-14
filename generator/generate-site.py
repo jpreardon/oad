@@ -33,7 +33,7 @@ def create_image_page(date, description, img_path):
     html += "<div />\n"
     html += "</body>\n"
     html += "<footer>\n"
-    html += "<p>Copyright &copy; 2023 JP Reardon</p>\n"
+    html += "<p>" + copyright + "</p>\n"
     html += "</footer>\n"
     html += "</html>\n"
     return html
@@ -55,7 +55,7 @@ def create_index_page(data, img_dir):
     html += "<head>\n"
     html += "<meta charset=\"UTF-8\">\n"
     html += "<title>One a Day</title>\n"
-    html += "<meta name=\"description\" content=\"Photoblogging like it's 1996! One picture a day, for a year (at least).\" />\n"
+    html += "<meta name=\"description\" content=\"" + site_description + "\" />\n"
     html += "<link rel=\"alternate\" type=\"application/rss+xml\" href=\"" + site_url + "rss.xml\" title=\"RSS Feed\">\n"
     html += "<link href=\"styles/main.css\" rel=\"stylesheet\">\n"
     html += "</head>\n"
@@ -80,7 +80,7 @@ def create_index_page(data, img_dir):
     html += "</div>\n"
     html += "</body>\n"
     html += "<footer>\n"
-    html += "<p>Copyright &copy; 2023 JP Reardon</p>\n"
+    html += "<p>" + copyright + "</p>\n"
     html += "</footer>\n"
     html += "</html>\n"
 
@@ -102,7 +102,11 @@ def create_rss_feed(data, img_dir):
     rss += "<channel>\n"
     rss += "<title>One a Day</title>\n"
     rss += "<link>" + site_url + "</link>\n"
-    rss += "<description>Photoblogging like it's 1996! One picture a day, for a year (at least).</description>\n"
+    rss += "<description>" + site_description + "</description>\n"
+    rss += "<language>en-us</language>\n"
+    rss += "<copyright>" + copyright + "</copyright>\n"
+    rss += "<lastBuildDate>" + datetime.now().strftime(date_format) + "</lastBuildDate>\n"
+    rss += "<docs>https://www.rssboard.org/rss-specification</docs>\n"
 
     for item in data:
         date = item["date"]
@@ -128,11 +132,16 @@ def rfc822date(date_string):
 
     rfc_date_string = datetime.strptime(date_string, '%B %d, %Y')
     
-    return rfc_date_string.strftime("%a, %d %b %Y %H:%M:%S -0000")
+    return rfc_date_string.strftime(date_format)
 
 if __name__ == "__main__":
 
     try:
+        # Some global variables
+        copyright = "Copyright © 2023 JP Reardon"
+        site_description = "Photoblogging like it's 1996! One picture a day, for a year (at least)."
+        date_format = "%a, %d %b %Y %H:%M:%S -0000"
+
         # Get URL and paths from command arguments
         site_url = sys.argv[1]
 
