@@ -6,7 +6,7 @@ import html
 import sys
 from datetime import datetime, timezone
 
-def create_image_page(date, description, img_path):
+def create_image_page(date, description, img_path, prev_page_path, next_page_path):
     """
     Create a static HTML page for an individual image.
 
@@ -32,7 +32,7 @@ def create_image_page(date, description, img_path):
     html += "</div>\n"
     html += "</body>\n"
     html += "<footer>\n"
-    html += "<a href=\"index.html\" >go back...</a>"
+    html += "<p><a href=\"" + prev_page_path + "\"><</a>  |  <a href=\"index.html\">index</a>  |  <a href=\"" + next_page_path + "\">></a></p>"
     html += "<p>" + copyright + "</p>\n"
     html += "</footer>\n"
     html += "</html>\n"
@@ -49,6 +49,9 @@ def create_index_page(data, img_dir):
     Returns:
         str: The HTML code for the page.
     """
+
+    previous_data_item = data[len(data) - 1]
+    next_data_item = data[1]
 
     html = "<!DOCTYPE html>\n"
     html += "<html lang=\"en\">\n"
@@ -71,12 +74,18 @@ def create_index_page(data, img_dir):
             img_path = os.path.join(img_dir, image["filename"])
             thumb_path = os.path.join(img_dir, thumbnail["filename"])
             page_name = image["filename"].split(".")[0] + ".html"
+            previous_page_path = previous_data_item["image"]["filename"].split(".")[0] + ".html"
+            next_page_path = next_data_item["image"]["filename"].split(".")[0] + ".html"
             # Create individual image page
             with open(public_directory_path + page_name, "w") as f:
-                f.write(create_image_page(date, description, img_path))
+                f.write(create_image_page(date, description, img_path, previous_page_path, next_page_path))
             # Add link to index page
             html += "<a href=\"" + page_name + "\"><img class=\"thumbnail\" src=\"" + thumb_path + "\" alt=\"" + description + "\" title=\"" + date + " - " + description + "\"/></a>\n"
-
+            previous_data_item = item
+            if (data.index(item) + 1 >= len(data) - 1):
+                next_data_item = data[0]
+            else:
+                next_data_item = data[data.index(item) + 2]
     html += "</div>\n"
     html += "</body>\n"
     html += "<footer>\n"
@@ -133,6 +142,7 @@ def rfc822date(date_string):
     rfc_date_string = datetime.strptime(date_string, '%B %d, %Y').replace(tzinfo=timezone.utc)
     
     return rfc_date_string.strftime(date_format)
+
 
 if __name__ == "__main__":
 
