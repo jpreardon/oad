@@ -80,7 +80,7 @@ def create_index_page(data, img_dir):
             with open(public_directory_path + page_name, "w") as f:
                 f.write(create_image_page(date, description, img_path, previous_page_path, next_page_path))
             # Add link to index page
-            html += "<a href=\"" + page_name + "\"><img class=\"thumbnail\" src=\"" + thumb_path + "\" alt=\"" + description + "\" title=\"" + date + " - " + description + "\"/></a>\n"
+            html += "<a href=\"" + page_name + "\"><img loading=\"lazy\" class=\"thumbnail\" src=\"" + thumb_path + "\" alt=\"" + description + "\" title=\"" + date + " - " + description + "\"/></a>\n"
             previous_data_item = item
             if (data.index(item) + 1 >= len(data) - 1):
                 next_data_item = data[0]
