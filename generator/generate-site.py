@@ -76,9 +76,11 @@ def create_index_page(data, img_dir):
             page_name = image["filename"].split(".")[0] + ".html"
             previous_page_path = previous_data_item["image"]["filename"].split(".")[0] + ".html"
             next_page_path = next_data_item["image"]["filename"].split(".")[0] + ".html"
-            # Create individual image page
-            with open(public_directory_path + page_name, "w") as f:
-                f.write(create_image_page(date, description, img_path, previous_page_path, next_page_path))
+            if (page_name not in file_list or update_files == "True"):
+                # Create individual image page
+                with open(public_directory_path + page_name, "w") as f:
+                    f.write(create_image_page(date, description, img_path, previous_page_path, next_page_path))
+                increment_count()
             # Add link to index page
             html += "<a href=\"" + page_name + "\"><img loading=\"lazy\" class=\"thumbnail\" src=\"" + thumb_path + "\" alt=\"" + description + "\" title=\"" + date + " - " + description + "\"/></a>\n"
             previous_data_item = item
@@ -143,6 +145,9 @@ def rfc822date(date_string):
     
     return rfc_date_string.strftime(date_format)
 
+def increment_count():
+    global change_file_count
+    change_file_count += 1
 
 if __name__ == "__main__":
 
@@ -151,35 +156,36 @@ if __name__ == "__main__":
         copyright = "Copyright © 2023 JP Reardon"
         site_description = "Photoblogging like it's 1996! One picture a day, for a year (at least)."
         date_format = "%a, %d %b %Y %H:%M:%S %z"
-
-        # Get URL and paths from command arguments
-        site_url = sys.argv[1]
-
-        # public directory path
-        public_directory_path = sys.argv[2]
-
         image_directory_name = "images"
-
-        # was "../images"
+        site_url = sys.argv[1] # URL
+        public_directory_path = sys.argv[2] # Public directory path
+        update_files = sys.argv[3] # If True, rewrites all image pages
         image_directory_path = public_directory_path + image_directory_name
-
+        change_file_count = 0
+        
         # Load JSON data
         with open(os.path.join(image_directory_path, "data.json"), "r") as f:
             data = json.load(f)
 
+        # Get list of existing HTML pages
+        file_list = os.listdir(public_directory_path)
+
         # Create index page with links to individual image pages
         index_page = create_index_page(data, image_directory_name)
 
-        # Create rss feed
-        rss = create_rss_feed(data, image_directory_name)
+        # Only write write files and create RSS if there are changes
+        if (change_file_count > 0):
+        
+            # Create rss feed
+            rss = create_rss_feed(data, image_directory_name)
 
-        # Write index page to file
-        with open(public_directory_path + "index.html", "w") as f:
-            f.write(index_page)
+            # Write index page to file
+            with open(public_directory_path + "index.html", "w") as f:
+                f.write(index_page)
 
-        # Write the rss feed to file
-        with open(public_directory_path + "rss.xml", "w") as f:
-            f.write(rss)
+            # Write the rss feed to file
+            with open(public_directory_path + "rss.xml", "w") as f:
+                f.write(rss)
 
     except Exception as e:
         print("Error:", e)
