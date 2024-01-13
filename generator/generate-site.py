@@ -6,6 +6,8 @@ import html
 import sys
 from datetime import datetime, timezone
 
+# This script takes 3 arguments: the site URL, public directory path, True if all HTML files should be recreated/overwritten
+
 def create_image_page(date, description, img_path, prev_page_path, next_page_path):
     """
     Create a static HTML page for an individual image.
@@ -52,6 +54,7 @@ def create_index_page(data, img_dir):
 
     previous_data_item = data[len(data) - 1]
     next_data_item = data[1]
+    changing_files = False
 
     html = "<!DOCTYPE html>\n"
     html += "<html lang=\"en\">\n"
@@ -76,11 +79,14 @@ def create_index_page(data, img_dir):
             page_name = image["filename"].split(".")[0] + ".html"
             previous_page_path = previous_data_item["image"]["filename"].split(".")[0] + ".html"
             next_page_path = next_data_item["image"]["filename"].split(".")[0] + ".html"
-            if (page_name not in file_list or update_files == "True"):
-                # Create individual image page
-                with open(public_directory_path + page_name, "w") as f:
-                    f.write(create_image_page(date, description, img_path, previous_page_path, next_page_path))
-                increment_count()
+            if (page_name not in file_list or update_files == "True" or changing_files == True):
+                changing_files = True
+                # Write a page if it's the very first page, or if it's a brand new page, or if the previous page is not in the file list
+                if (image["filename"] == "0001.jpg" or page_name not in file_list or previous_page_path[-9:] not in file_list):
+                    # Create individual image page
+                    with open(public_directory_path + page_name, "w") as f:
+                        f.write(create_image_page(date, description, img_path, previous_page_path, next_page_path))
+                    increment_count()
             # Add link to index page
             html += "<a href=\"" + page_name + "\"><img loading=\"lazy\" class=\"thumbnail\" src=\"" + thumb_path + "\" alt=\"" + description + "\" title=\"" + date + " - " + description + "\"/></a>\n"
             previous_data_item = item
