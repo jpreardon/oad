@@ -81,8 +81,8 @@ def create_index_page(data, img_dir):
             next_page_path = next_data_item["image"]["filename"].split(".")[0] + ".html"
             if (page_name not in file_list or update_files == "True" or changing_files == True):
                 changing_files = True
-                # Write a page if it's the very first page, or if it's a brand new page, or if the previous page is not in the file list
-                if (image["filename"] == "0001.jpg" or page_name not in file_list or previous_page_path[-9:] not in file_list):
+                # Write a page if it's the very first page, if it's a brand new page, if the previous page is not in the file list or if everything is being rewritten
+                if (image["filename"] == "0001.jpg" or page_name not in file_list or previous_page_path[-9:] not in file_list or update_files == "True"):
                     # Create individual image page
                     with open(public_directory_path + page_name, "w") as f:
                         f.write(create_image_page(date, description, img_path, previous_page_path, next_page_path))
