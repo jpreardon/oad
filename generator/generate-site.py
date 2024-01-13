@@ -153,7 +153,7 @@ if __name__ == "__main__":
 
     try:
         # Some global variables
-        copyright = "Copyright © 2023 JP Reardon"
+        copyright = "Copyright © 2023-24 JP Reardon"
         site_description = "Photoblogging like it's 1996! One picture a day, for a year (at least)."
         date_format = "%a, %d %b %Y %H:%M:%S %z"
         image_directory_name = "images"
