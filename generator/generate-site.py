@@ -64,6 +64,7 @@ def create_index_page(data, img_dir):
     html += "<meta name=\"description\" content=\"" + site_description + "\" />\n"
     html += "<link rel=\"alternate\" type=\"application/rss+xml\" href=\"" + site_url + "rss.xml\" title=\"RSS Feed\">\n"
     html += "<link href=\"styles/main.css\" rel=\"stylesheet\">\n"
+    html += "<link rel=\"me\" href=\"https://mastodon.social/@jpreardon\">"
     html += "</head>\n"
     html += "<body>\n"
     html += "<div class=\"grid\">\n"
